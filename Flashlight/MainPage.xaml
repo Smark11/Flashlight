@@ -1,0 +1,119 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="Flashlight.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    shell:SystemTray.IsVisible="True"
+    
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    
+    xmlns:common="clr-namespace:Common.UiComponents;assembly=Common"
+    
+    BackKeyPress="BackButtonClicked"
+    >
+
+    <phone:PhoneApplicationPage.Resources>
+        <Style x:Key="TransperentStyle" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="Transparent">
+                            <ContentPresenter>
+                                <ContentPresenter.Triggers>
+
+                                </ContentPresenter.Triggers>
+                            </ContentPresenter>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </phone:PhoneApplicationPage.Resources>
+
+    <Viewbox>
+        <!--LayoutRoot is the root grid where all page content is placed-->
+        <Grid x:Name="LayoutRoot" Background="Transparent">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height=".2*"/>
+            </Grid.RowDefinitions>
+
+            <!--ContentPanel - place additional content here-->
+            <Grid x:Name="ContentPanel" HorizontalAlignment="Center" Visibility="{Binding MainScreenVisibility}" Grid.Row="0" Margin="12,0,12,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <StackPanel HorizontalAlignment="Center" Grid.Row="0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Battery Percentage: "/>
+                        <TextBlock Text="{Binding BatteryPercentage}"/>
+                        <TextBlock Text="%"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="Time Remaining: "/>
+                        <TextBlock Text="{Binding TimeRemaining}"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <Button Visibility="{Binding ButtonVisibility}" Grid.Row="1" Style="{StaticResource TransperentStyle}" ManipulationCompleted="ManipulationCompleted" ManipulationStarted="ManipulationStarted" >
+                    <Image Source="{Binding PictureSource}" />
+                </Button>
+
+                <StackPanel Margin="0,50,0,50" Visibility="{Binding InitializeVisibility}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="2">
+                    <TextBlock HorizontalAlignment="Center" FontSize="26" Text="Initializing Flashlight"/>
+                    <ProgressBar Width="{Binding ScreenWidth}" HorizontalAlignment="Center" IsIndeterminate="True"/>
+                </StackPanel>
+
+            </Grid>
+
+            <Grid Visibility="{Binding SettingsVisibility}" Grid.Row="1">
+                <StackPanel>
+                    <toolkit:ToggleSwitch Content="Hold To Turn On" IsChecked="{Binding HoldOnChecked, Mode=TwoWay}"/>
+                    <toolkit:ToggleSwitch Content="On At Start-Up" IsChecked="{Binding OnStartUpChecked, Mode=TwoWay}"/>
+                    <toolkit:ToggleSwitch Content="Strobe On" IsChecked="{Binding StrobeOn, Mode=TwoWay}"/>
+                    <toolkit:ToggleSwitch Content="On Under Screen Locked" IsChecked="{Binding OnWhenLockedChecked, Mode=TwoWay}"/>
+                    <StackPanel>
+                        <TextBlock Text="Strobe Frequency"/>
+                        <Slider Minimum="1" Maximum="1000" Value="{Binding StrobeFrequency, Mode=TwoWay}"/>
+                    </StackPanel>
+
+                </StackPanel>
+            </Grid>
+
+            <Button Height="150" Visibility="{Binding MainScreenVisibility}" VerticalAlignment="Bottom"  Click="GoToSpyCam" Grid.Row="2">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/SpyCam300x300.png" />
+                    <TextBlock Margin="5,0,0,0" FontSize="20" VerticalAlignment="Center" Text="Try Spy-Camera Free!"/>
+                </StackPanel>
+            </Button>
+
+            <StackPanel Visibility="{Binding AboutScreenVisibility}">
+                <TextBlock HorizontalAlignment="Center" FontSize="36" Text="SuperBright Flash-Light"/>
+                <common:SupportScreen/>
+            </StackPanel>
+
+        </Grid>
+    </Viewbox>
+
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar x:Name="NavBar"  Mode="Minimized" >
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Click="AboutClicked" Text="About"/>
+                <shell:ApplicationBarMenuItem Click="RatingsClicked" Text="Rate"/>
+            </shell:ApplicationBar.MenuItems>
+            <shell:ApplicationBarIconButton Click="SettingsClicked" IconUri="/Assets/AppBar/feature.settings.png" Text="Settings"/>
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
+
+</phone:PhoneApplicationPage>
